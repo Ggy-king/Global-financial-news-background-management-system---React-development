@@ -15,6 +15,7 @@ import {
   ProfileOutlined,
   FundViewOutlined,
   FontSizeOutlined,
+  ApartmentOutlined,
   HistoryOutlined,
   CloudUploadOutlined,
   CloseCircleOutlined
@@ -35,29 +36,33 @@ const iconList = {
   "/authority-manage": <SlidersOutlined />,
   "/authority-manage/role/list": <TeamOutlined />,
   "/authority-manage/authority/list": <UnlockOutlined />,
-  "/news-manage":<EditOutlined />,
-  "/news-manage/add":<FontSizeOutlined />,
-  "/news-manage/draft":<EditOutlined />,
-  "/audit-manage":<FileProtectOutlined />,
-  "/audit-manage/audit":<FundViewOutlined />,
-  "/audit-manage/list":<ProfileOutlined />,
-  "/publish-manage":<SelectOutlined />,
-  "/publish-manage/unpublished":<HistoryOutlined />,
-  "/publish-manage/published":<CloudUploadOutlined />,
-  "/publish-manage/sunset":<CloseCircleOutlined />
+  "/news-manage": <EditOutlined />,
+  "/news-manage/add": <FontSizeOutlined />,
+  "/news-manage/draft": <EditOutlined />,
+  "/news-manage/category": <ApartmentOutlined />,
+  "/audit-manage": <FileProtectOutlined />,
+  "/audit-manage/audit": <FundViewOutlined />,
+  "/audit-manage/list": <ProfileOutlined />,
+  "/publish-manage": <SelectOutlined />,
+  "/publish-manage/unpublished": <HistoryOutlined />,
+  "/publish-manage/published": <CloudUploadOutlined />,
+  "/publish-manage/sunset": <CloseCircleOutlined />
 }
 
 function SideMenu(props) {
   const [menu, setMenu] = useState([])
   useEffect(() => {
-    axios.get("http://localhost:5000/rights?_embed=children").then(res => {
+    axios.get("/rights?_embed=children").then(res => {
       setMenu(res.data)
     })
   }, [])
 
+  const { role: { rights } } = JSON.parse(localStorage.getItem("token"))
+
   const checkPagePermission = (item) => {
-    return item.pagepermisson
+    return item.pagepermisson && (Array.isArray(rights) ? rights : rights.checked).includes(item.key)
   }
+
   const renderMenu = (menuList) => {
     return menuList.map(item => {
       if (item.children?.length > 0 && Boolean(checkPagePermission(item))) {

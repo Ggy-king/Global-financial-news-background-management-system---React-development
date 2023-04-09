@@ -6,9 +6,9 @@ const { confirm } = Modal
 
 export default function RoleList() {
   const [dataSource, setDataSource] = useState([])
-  
+
   useEffect(() => {
-    axios.get("http://localhost:5000/rights?_embed=children").then(res => {
+    axios.get("/rights?_embed=children").then(res => {
       const list = res.data
       list.forEach(item => {
         if (item.children.length === 0) {
@@ -39,11 +39,11 @@ export default function RoleList() {
       title: "权限控制",
       render: (item) => {
         return <div>
-          <Button danger type="primary" shape="circle" icon={<DeleteOutlined />} onClick={() => confirms(item)} />
+          <Button danger type="primary" shape="circle" icon={<DeleteOutlined />} onClick={() => confirms(item)} style={{ marginLeft: "2px" }}/>
           <Popover content={<div style={{ textAlign: 'center' }}>
             <Switch checked={item.pagepermisson} onChange={() => switchMethod(item)}></Switch>
           </div>} title="权限开启与关闭" trigger={item.pagepermisson === undefined ? '' : 'click'}>
-            <Button type="primary" shape="circle" icon={<FormOutlined />} disabled={item.pagepermisson === undefined} />
+            <Button type="primary" shape="circle" icon={<FormOutlined />} disabled={item.pagepermisson === undefined} style={{ marginLeft: "10px" }} />
           </Popover>
         </div>
       }
@@ -51,19 +51,19 @@ export default function RoleList() {
   ];
 
   const switchMethod = (item) => {
-    item.pagepermisson = item.pagepermisson === 1?0:1
+    item.pagepermisson = item.pagepermisson === 1 ? 0 : 1
     setDataSource([...dataSource])  //强行刷新数据
 
-    if(item.grade === 1){
-      axios.patch(`http://localhost:5000/rights/${item.id}`,{
+    if (item.grade === 1) {
+      axios.patch(`/rights/${item.id}`, {
         pagepermisson: item.pagepermisson
       })
     } else {
-      axios.patch(`http://localhost:5000/children/${item.id}`,{
+      axios.patch(`/children/${item.id}`, {
         pagepermisson: item.pagepermisson
       })
     }
-  } 
+  }
 
   const confirms = (item) => {
     confirm({
@@ -86,14 +86,14 @@ export default function RoleList() {
     // 这里的代码应该前后端同步
     if (item.grade === 1) {
       setDataSource(dataSource.filter(data => data.id !== item.id))
-      axios.delete(`http://localhost:5000/rights/${item.id}`)
+      axios.delete(`/rights/${item.id}`)
     } else {
       let list = dataSource.filter(data => data.id === item.rightId)
 
       list[0].children = list[0].children.filter(data => data.id !== item.id)
 
       setDataSource([...dataSource])
-      axios.delete(`http://localhost:5000/children/${item.id}`)
+      axios.delete(`/children/${item.id}`)
 
     }
 
@@ -102,7 +102,7 @@ export default function RoleList() {
 
   return (
     <div>
-      <Table dataSource={dataSource} columns={columns} pagination={{pageSize:6}} />
+      <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 6 }} rowKey={item => item.id} />
     </div>
   )
 }

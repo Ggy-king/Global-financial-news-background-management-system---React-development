@@ -1,13 +1,13 @@
-import React from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import React, { useEffect } from 'react'
+
+import NProgress from 'nprogress'
+import 'nProgress/nprogress.css'
 
 import SideMenu from '../../components/newsSand/SideMenu'
 import TopHeader from '../../components/newsSand/TopHeader'
-import AuthorityList from './authority-manage/AuthorityList'
-import RoleList from './authority-manage/RoleList'
-import Home from './home/Home'
-import NoPermission from './noPermission/NoPermission'
-import UserList from './user-manage/UserList'
+import NewsRouter from '../../components/newsSand/NewsRouter'
+
+
 
 // css
 import './NewsSand.css'
@@ -18,6 +18,10 @@ import { Layout } from 'antd'
 const {Content} = Layout
 
 export default function NewsSand() {
+    NProgress.start()
+    useEffect(() => {
+        NProgress.done()
+    })
     return (
         <Layout>
             <SideMenu></SideMenu>
@@ -33,17 +37,7 @@ export default function NewsSand() {
                         overflow:'auto'
                     }}
                 >
-                    <Switch>
-                        <Route path="/home" component={Home} />
-                        <Route path="/user-manage/list" component={UserList} />
-                        <Route path="/authority-manage/role/list" component={RoleList} />
-                        <Route path="/authority-manage/authority/list" component={AuthorityList} />
-
-                        <Redirect from="/" to="/home" exact />
-                        <Route path="*" component={NoPermission} />
-                        {/* 上写法优先级最低 所有的都不匹配才是 */}
-                    </Switch>
-
+                    <NewsRouter></NewsRouter>
                 </Content>
 
             </Layout>

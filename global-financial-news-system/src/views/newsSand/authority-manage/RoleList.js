@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons'
 
 
-import { Table,Button,Modal,Tree } from 'antd'
+import { Table, Button, Modal, Tree } from 'antd'
 
 const { confirm } = Modal
 
@@ -16,6 +16,7 @@ export default function RoleList() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [rightList, setRightList] = useState([])
   const [currentRights, setCurrentRights] = useState([])
+  const [currentId, setCurrentId] = useState(0)
 
   const columns = [
     {
@@ -31,16 +32,20 @@ export default function RoleList() {
       title: "角色权限控制",
       render: (item) => {
         return <div>
-          <Button danger type="primary" shape="circle" icon={<DeleteOutlined />} onClick={() => confirms(item)}  />
-          <Button type="primary" shape="circle" icon={<ControlOutlined />}  onClick={() =>{ 
+          <Button danger type="primary" shape="circle" icon={<DeleteOutlined />} onClick={() => confirms(item)} 
+          disabled={item.default} style={{ marginLeft: "2px" }}/>
+          <Button type="primary" shape="circle" icon={<ControlOutlined />} onClick={() => {
             setIsModalOpen(true)
-            setCurrentRights(item.rights)}} />
+            setCurrentRights(item.rights)
+            setCurrentId(item.id)
+          }}
+          style={{ marginLeft: "10px" }} />
         </div>
       }
     },
   ]
 
-  const confirms = (item) => {  
+  const confirms = (item) => {
     confirm({
       title: '您确定要删除该角色吗',
       icon: <ExclamationCircleOutlined />,
@@ -59,25 +64,38 @@ export default function RoleList() {
 
   const deleteMethod = (item) => {
     setDataSource(dataSource.filter(data => data.id !== item.id))
-    axios.delete(`http://localhost:5000/roles/${item.id}`)
+    axios.delete(`/roles/${item.id}`)
 
   }
 
   useEffect(() => {
-    axios.get('http://localhost:5000/roles').then(res => {
+    axios.get('/roles').then(res => {
       setDataSource(res.data)
     })
-  },[])
+  }, [])
 
   useEffect(() => {
-    axios.get('http://localhost:5000/rights?_embed=children').then(res => {
+    axios.get('/rights?_embed=children').then(res => {
       setRightList(res.data)
     })
-  },[])
+  }, [])
 
 
   const handleOk = () => {
-    
+    setIsModalOpen(false);
+    setDataSource(dataSource.map(item => {
+      if (item.id === currentId) {
+        return {
+          ...item,
+          rights: currentRights
+        }
+      }
+      return item
+    }))
+
+    axios.patch(`/roles/${currentId}`, {
+      rights: currentRights
+    })
   }
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -89,14 +107,14 @@ export default function RoleList() {
   return (
     <div>
       <Table dataSource={dataSource} columns={columns} rowKey={(item) => item.id}
-       pagination={{pageSize:7}}/>
+        pagination={{ pageSize: 7 }} />
       <Modal title="角色权限更改" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <Tree
-        checkable
-        checkedKeys={currentRights}
-        onCheck={onCheck}
-        checkStrictly={true}
-        treeData={rightList} 
+          checkable
+          checkedKeys={currentRights}
+          onCheck={onCheck}
+          checkStrictly={true}
+          treeData={rightList}
         />
       </Modal>
     </div>
