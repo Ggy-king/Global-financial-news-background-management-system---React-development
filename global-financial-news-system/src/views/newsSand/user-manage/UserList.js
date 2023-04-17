@@ -147,9 +147,6 @@ export default function UserList() {
   const addFromOK = () => {
     addFrom.current.validateFields().then(value => {
 
-      console.log(value)
-      console.log(regionList)
-
       setIsOpen(false)
       addFrom.current.resetFields()
       axios.post(`/users`, {

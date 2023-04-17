@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
 import NProgress from 'nprogress'
-import 'nProgress/nprogress.css'
+import 'nprogress/nprogress.css'
 
 import SideMenu from '../../components/newsSand/SideMenu'
 import TopHeader from '../../components/newsSand/TopHeader'

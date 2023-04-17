@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 import axios from 'axios'
 
@@ -18,6 +19,7 @@ import Published from '../../views/newsSand/publish-manage/Published'
 import Sunset from '../../views/newsSand/publish-manage/Sunset'
 import NewsPreview from '../../views/newsSand/news-manage/NewsPreview'
 import NewsUpdate from '../../views/newsSand/news-manage/NewsUpdate'
+import { Spin } from 'antd'
 
 
 const LocalRouterMap = {
@@ -37,7 +39,7 @@ const LocalRouterMap = {
     "/publish-manage/sunset": Sunset
 }
 
-export default function NewsRouter() {
+function NewsRouter(props) {
 
     const [BackRouterList, setBackRouterList] = useState([])
     useEffect(() => {
@@ -59,27 +61,33 @@ export default function NewsRouter() {
     }
 
     return (
-        <Switch>
-            {
-                BackRouterList.map(
-                    item => {
-                        if (checkRoute(item) && checkUserPermission(item)) {
-                            return <Route path={item.key} key={item.key}
-                                component={LocalRouterMap[item.key]} exact />
-                        }
-                        return null
+        <Spin size='large' spinning={props.isLoading}>
+            <Switch>
+                {
+                    BackRouterList.map(
+                        item => {
+                            if (checkRoute(item) && checkUserPermission(item)) {
+                                return <Route path={item.key} key={item.key}
+                                    component={LocalRouterMap[item.key]} exact />
+                            }
+                            return null
 
-                    })
-            }
+                        })
+                }
 
-            <Redirect from="/" to="/home" exact />
+                <Redirect from="/" to="/home" exact />
 
-            {
-                BackRouterList.length > 0 && <Route path="*" component={NoPermission} />
-            }
+                {
+                    BackRouterList.length > 0 && <Route path="*" component={NoPermission} />
+                }
 
-            {/* 上写法优先级最低 所有的都不匹配才是 */}
-        </Switch>
-
+                {/* 上写法优先级最低 所有的都不匹配才是 */}
+            </Switch>
+        </Spin>
     )
 }
+const mapStateToProps = ({ LoadingReducer: { isLoading } }) => ({
+    isLoading
+})
+
+export default connect(mapStateToProps)(NewsRouter)

@@ -5,6 +5,8 @@ import moment from 'moment';
 
 export default function NewsPreview(props) {
     const [newsInfo, setNewsInfo] = useState(null)
+    const colorList = ["#5b8ff1","orange","green","red"]
+
     useEffect(() => {
         axios.get(`news/${props.match.params.id}?_expand=category&_expand=role`).then(
             res => { setNewsInfo(res.data) }
@@ -28,8 +30,8 @@ export default function NewsPreview(props) {
                             <Descriptions.Item label="创建时间">{moment(newsInfo.createTime).format("YYYY/MM/DD HH:mm:ss")}</Descriptions.Item>
                             <Descriptions.Item label="发布时间">{newsInfo.publishTime?moment(newsInfo.createTime).format("YYYY/MM/DD HH:mm:ss"):"-"}</Descriptions.Item>
                             <Descriptions.Item label="区域">全球</Descriptions.Item>
-                            <Descriptions.Item label="审核状态"><span style={{color:"red"}}>{auditList[newsInfo.auditState]}</span></Descriptions.Item>
-                            <Descriptions.Item label="发布状态"><span style={{color:"red"}}>{publishList[newsInfo.publishState]}</span></Descriptions.Item>
+                            <Descriptions.Item label="审核状态"><span style={{color:colorList[newsInfo.auditState]}}>{auditList[newsInfo.auditState]}</span></Descriptions.Item>
+                            <Descriptions.Item label="发布状态"><span style={{color:colorList[newsInfo.publishState]}}>{publishList[newsInfo.publishState]}</span></Descriptions.Item>
                             <Descriptions.Item label="访问数量">{newsInfo.view}</Descriptions.Item>
                             <Descriptions.Item label="点赞数量">{newsInfo.star}</Descriptions.Item>
                             <Descriptions.Item label="评论数量">0</Descriptions.Item>

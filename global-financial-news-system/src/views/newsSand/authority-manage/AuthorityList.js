@@ -33,7 +33,7 @@ export default function RoleList() {
       title: "高级权限路径",
       dataIndex: 'key',
       render: (key) => {
-        return <Tag color='purple'>{key}</Tag>
+        return <Tag style={{color:'purple'}}>{key}</Tag>
       }
     }, {
       title: "权限控制",

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { Layout, Dropdown, Menu, Space, Avatar, Badge } from 'antd'
 import {
@@ -9,13 +9,16 @@ import {
   AlignLeftOutlined,
   DingtalkOutlined
 } from '@ant-design/icons';
+import {connect} from 'react-redux'
 const { Header } = Layout
 
 function TopHeader(props) {
-  const [collapsed, setCollapsed] = useState(false)
-  const changeCollected = () => {
-    setCollapsed(!collapsed)
+  // const [collapsed, setCollapsed] = useState(false)
+  const changeCollapsed = () => {
+    props.changeCollapsed()
+  
   }
+
 
   const { role: { roleName }, username } = JSON.parse(localStorage.getItem("token"))
 
@@ -25,9 +28,9 @@ function TopHeader(props) {
         <DingtalkOutlined /> {roleName}
       </Menu.Item>
 
-        <Menu.Item disabled>
-          <AlignLeftOutlined /> 消息列表
-        </Menu.Item>
+      <Menu.Item disabled>
+        <AlignLeftOutlined /> 消息列表
+      </Menu.Item>
 
       <Menu.Item danger onClick={() => {
         localStorage.removeItem("token")
@@ -46,9 +49,8 @@ function TopHeader(props) {
       }}
     >
       {
-        collapsed ? <MenuUnfoldOutlined
-          onClick={changeCollected} /> : <MenuFoldOutlined
-          onClick={changeCollected} />
+        props.isCollapsed ? <MenuUnfoldOutlined onClick={changeCollapsed} />
+          : <MenuFoldOutlined onClick={changeCollapsed} />
       }
 
       <span style={{ position: "absolute", top: "0", left: "40%", fontSize: "12px", fontWeight: "700", color: "#aaa" }}
@@ -66,6 +68,21 @@ function TopHeader(props) {
       </div>
     </Header>
   )
+
 }
 
-export default withRouter(TopHeader) 
+const mapStateToProps = ({CollapsedReducer:{isCollapsed}}) => ({
+  isCollapsed
+})
+
+const mapDispatchToProps = {
+  changeCollapsed() {
+    return {
+      type: "change_collapsed"
+    }
+  }
+}
+
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(TopHeader))
