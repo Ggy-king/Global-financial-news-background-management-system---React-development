@@ -26,7 +26,7 @@ export default function NewsPreview(props) {
                         style={{border:"1px solid #f3f3f3"}}
                     >
                         <Descriptions size="small" column={3}>
-                            <Descriptions.Item label="创建者">{newsInfo.author}</Descriptions.Item>
+                            <Descriptions.Item label="创建者"><span style={{color:'black',fontWeight:'bold'}}>{newsInfo.author}</span></Descriptions.Item>
                             <Descriptions.Item label="创建时间">{moment(newsInfo.createTime).format("YYYY/MM/DD HH:mm:ss")}</Descriptions.Item>
                             <Descriptions.Item label="发布时间">{newsInfo.publishTime?moment(newsInfo.createTime).format("YYYY/MM/DD HH:mm:ss"):"-"}</Descriptions.Item>
                             <Descriptions.Item label="区域">全球</Descriptions.Item>

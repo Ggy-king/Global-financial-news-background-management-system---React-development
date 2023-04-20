@@ -39,7 +39,8 @@ function TopHeader(props) {
         <LogoutOutlined /> 退出
       </Menu.Item>
     </Menu>
-  );
+  )
+  
   return (
     <Header
       className="site-layout-background"
@@ -61,7 +62,7 @@ function TopHeader(props) {
         <Dropdown overlay={menu}>
           <Space>
             <Badge count={1}>
-              <Avatar shape="square" icon={<UserOutlined />} />
+              <Avatar shape="square" src="user.jfif" />
             </Badge>
           </Space>
         </Dropdown>
