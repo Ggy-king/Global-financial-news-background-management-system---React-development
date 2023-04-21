@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Button, Table, notification } from 'antd'
+import {CheckOutlined,CloseOutlined} from '@ant-design/icons'
 
 export default function Audit() {
   const [dataSource, setDataSource] = useState([])
@@ -45,8 +46,11 @@ export default function Audit() {
       title: "操作",
       render: (item) => {
         return <div>
-          <Button type='primary' onClick={() => handleAudit(item, 2, 1)}>通过</Button>
-          <Button danger onClick={() => handleAudit(item, 3, 0)}>驳回</Button>
+          <Button shape='circle' type='primary' onClick={() => handleAudit(item, 2, 1)} icon={<CheckOutlined />}></Button>
+          <Button shape='circle' danger 
+          onClick={() => handleAudit(item, 3, 0)} 
+          icon={<CloseOutlined />}
+          style={{marginLeft:"10px"}}></Button>
         </div>
       }
     }

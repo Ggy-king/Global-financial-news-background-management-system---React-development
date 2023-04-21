@@ -4,7 +4,6 @@ import { Layout, Dropdown, Menu, Space, Avatar, Badge } from 'antd'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  UserOutlined,
   LogoutOutlined,
   AlignLeftOutlined,
   DingtalkOutlined

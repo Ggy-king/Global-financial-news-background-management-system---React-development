@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Row, Col, Card, List, Avatar, Drawer } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import { Row, Col, Card, List, Avatar, Drawer, Tag } from 'antd';
+import { PieChartOutlined, EllipsisOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import * as Echarts from 'echarts'
 import _ from 'lodash'
@@ -12,6 +12,7 @@ export default function Home() {
   const [starList, setStarList] = useState([])
   const [allList, setAllList] = useState([])
   const [open, setOpen] = useState(false)
+  const [openMore, setOpenMore] = useState(false)
   const [pieChart, setPieChart] = useState(null)
   const barRef = useRef()
   const pieRef = useRef()
@@ -157,12 +158,12 @@ export default function Home() {
             cover={
               <img
                 alt="example"
-                src="index.webp"
+                src="indexD.gif"
                 style={{ width: "100%", height: "100%" }}
               />
             }
             actions={[
-              <SettingOutlined key="setting" onClick={() => {
+              <PieChartOutlined key="setting" onClick={() => {
                 async function setOpenA() {
                   setOpen(true)
                 }
@@ -173,8 +174,10 @@ export default function Home() {
                 setOpenB()
 
               }} />,
-              <EditOutlined key="edit" />,
-              <EllipsisOutlined key="ellipsis" />,
+              <EllipsisOutlined key="more" onClick={() => {
+                setOpenMore(true)
+                // more()
+              }} />
             ]}
           >
             <Meta
@@ -193,7 +196,7 @@ export default function Home() {
 
       <Drawer
         width="500px"
-        title="个人新闻分类展示"
+        title="我的新闻分类展示"
         placement="right"
         onClose={() => { setOpen(false) }}
         open={open}>
@@ -203,6 +206,22 @@ export default function Home() {
           height: "400px",
           marginTop: "30px"
         }}></div>
+      </Drawer>
+
+      <Drawer
+        height="400px"
+        title="高广源的个人简介"
+        placement="bottom"
+        onClose={() => { setOpenMore(false) }}
+        open={openMore}>
+
+        <div>
+          <div>
+            <Tag color='#cd201f'
+             style={{ fontSize: "14px", fontWeight: "700",color:"#fff" }}>下面是图片，不可点击</Tag>
+          </div>
+          <img alt='我的个人简介' src='more.png' style={{ width: "80%", height: "90%" }} />
+        </div>
       </Drawer>
 
       <div ref={barRef} style={{
